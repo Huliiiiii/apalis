@@ -730,7 +730,7 @@ where
             .key(signal_list)
             .arg(req.parts.task_id.to_string())
             .arg(job)
-            .invoke_async(conn)
+            .invoke_async::<()>(conn)
             .await?;
         Ok(req.parts)
     }
@@ -753,7 +753,7 @@ where
             .key(signal_list)
             .arg(req.parts.task_id.to_string())
             .arg(job)
-            .invoke_async(conn)
+            .invoke_async::<()>(conn)
             .await?;
         Ok(req.parts)
     }
@@ -774,7 +774,7 @@ where
             .arg(req.parts.task_id.to_string())
             .arg(job)
             .arg(on)
-            .invoke_async(&mut self.conn)
+            .invoke_async::<()>(&mut self.conn)
             .await?;
         Ok(req.parts)
     }
@@ -838,13 +838,13 @@ where
         redis::cmd("SREM")
             .arg(inflight_set)
             .arg(job_id.to_string())
-            .query_async(&mut self.conn)
+            .query_async::<()>(&mut self.conn)
             .await?;
         redis::cmd("ZADD")
             .arg(failed_jobs_set)
             .arg(on)
             .arg(job_id.to_string())
-            .query_async(&mut self.conn)
+            .query_async::<()>(&mut self.conn)
             .await?;
         schedule_job
             .key(job_data_hash)
